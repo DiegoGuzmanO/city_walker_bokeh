@@ -147,8 +147,8 @@ tops_per_cluster=pd.DataFrame()
 tops_coord=pd.DataFrame()
 
 for i in range(len(df_patrimoine['label'].unique())):
-  X = df_patrimoine[df_patrimoine['label'] == i]['X'].to_numpy().reshape(-1, 1)
-  Y = df_patrimoine[df_patrimoine['label'] == i]['Y'].to_numpy().reshape(-1, 1)
+  X = df_patrimoine[df_patrimoine['label']==i]['X'].to_numpy().reshape(-1,1)
+  Y = df_patrimoine[df_patrimoine['label']==i]['Y'].to_numpy().reshape(-1,1)
 
   XY = np.concatenate(
       [X, Y],
@@ -174,7 +174,7 @@ for i in range(len(df_patrimoine['label'].unique())):
 ## On ne veut pas qu'un point soit fortement connecté avec lui même
   normalized_dists = normalized_dists - np.eye(len(X))
 
-## Normalise sur les lignes pour obtenir une loi de probabilité sur chaque ligne
+## Normalisation des distances pour obtenir des valeurs probabilistiques
   normalized_dists /= normalized_dists.sum(axis = 1).reshape(-1, 1)
 
 ## Application du pagerank
@@ -309,9 +309,6 @@ for cluster in top_centroids.index:
 
 # Affichage des top 5 pagerank, restaurants et zones commerciales
 
-#on créé une liste qui contiendra les objets p à afficher
-liste_p=[]
-
 for cluster in range(slider_clusters):
     
     # Création de la figure à ploter
@@ -321,6 +318,7 @@ for cluster in range(slider_clusters):
              x_range = (250598, 269950),
              y_range = (6242153, 6259275), 
              title= 'jour de visite n°%i' %jour)
+    tuile=get_provider('CARTODBPOSITRON_RETINA')
     
     p.axis.visible=False
     p.add_tile(tuile)   
@@ -333,21 +331,12 @@ for cluster in range(slider_clusters):
     for node in tops_per_cluster.iloc[:,cluster]:
         colors[node[0]] = 'red'
         line_coords=line_coords.append(
-            {"X":df_patrimoine[df_patrimoine['label']==cluster].iloc[node[0],0],
-             'Y':df_patrimoine[df_patrimoine['label'] == cluster].iloc[node[0],1]},
-            ignore_index=True)
+            {"X":df_patrimoine[df_patrimoine['label']==cluster].iloc[node[0],1],
+             'Y':df_patrimoine[df_patrimoine['label']==cluster].iloc[node[0],2]},
+            ignore_index=True
+            )
         
-        source_lines=ColumnDataSource(line_coords)
-        
-    # Affichage du tracet des lignes entre points prioritaires
-    p.multi_line(
-        xs='X',
-        ys='Y',
-        color='red',
-        line_dash='dotted',
-        source=source_lines
-        )
-        
+
     #Affichage des points patrimoine
     df_patrimoine_cluster=df_patrimoine[df_patrimoine['label']==cluster]
     colors=colors[0:len(df_patrimoine_cluster)]
@@ -434,8 +423,7 @@ for cluster in range(slider_clusters):
         renderers=[renderer1,renderer2],
         tooltips=tooltips
         )
+    
     p.add_tools(h)
         
     st.bokeh_chart(p)
-
-  
