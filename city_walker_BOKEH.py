@@ -739,8 +739,6 @@ else:
         jour=cluster+1
         p=figure(plot_width=600,
                  plot_height=400,
-                 x_range = (250598, 269950),
-                 y_range = (6242153, 6259275), 
                  title= 'jour de visite n°%i' %jour)
         tuile=get_provider('CARTODBPOSITRON_RETINA')
         
