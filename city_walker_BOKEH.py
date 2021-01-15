@@ -322,7 +322,7 @@ if code_display =="Oui":
             # Création de la figure à ploter
             jour=cluster+1
             p=figure(plot_width=600,
-                     plot_height=400, 
+                     plot_height=400,
                      title= 'jour de visite n°%i' %jour)
             tuile=get_provider('CARTODBPOSITRON_RETINA')
             
@@ -333,9 +333,12 @@ if code_display =="Oui":
             # préparation des couleurs des points prio et enregistrement de leurs coord
             line_coords=pd.DataFrame(columns=('X','Y'))
             colors = ['blue' for i in range(120)]
+            legend = ["Autres Lieux patrimoniaux" for i in range(120)]
+            
             
             for node in tops_per_cluster.iloc[:,cluster]:
                 colors[node[0]] = 'red'
+                legend[node[0]] = 'Points patrimoniaux à visiter en priorité'
                 line_coords=line_coords.append(
                     {"X":df_patrimoine[df_patrimoine['label']==cluster].iloc[node[0],1],
                      'Y':df_patrimoine[df_patrimoine['label']==cluster].iloc[node[0],2]},
@@ -346,7 +349,9 @@ if code_display =="Oui":
             #Affichage des points patrimoine
             df_patrimoine_cluster=df_patrimoine[df_patrimoine['label']==cluster]
             colors=colors[0:len(df_patrimoine_cluster)]
+            legend=legend[0:len(df_patrimoine_cluster)]
             df_patrimoine_cluster['colors']=colors
+            df_patrimoine_cluster['legend']=legend
             source_patrimoine=ColumnDataSource(df_patrimoine_cluster)
             renderer1=p.circle(
                 x='X',
@@ -354,7 +359,8 @@ if code_display =="Oui":
                 size=8,
                 alpha=0.7,
                 source=source_patrimoine,
-                color='colors'
+                color='colors',
+                legend='legend'
                 )
             
             #Affichage des restaurants
@@ -365,7 +371,8 @@ if code_display =="Oui":
                 size=8,
                 alpha=0.7,
                 source=source_restaurants,
-                color='green')
+                color='green',
+                legend_label='Restaurants')
             
             
             #Affichage des zones commerciales
@@ -376,7 +383,8 @@ if code_display =="Oui":
                     y='Y',
                     source=source_shopping,
                     color='orange',
-                    alpha=0.5
+                    alpha=0.5,
+                    legend_label='Zones commerciales'
                     )
             
             # Optimisation du trajet entre points prioritaires
@@ -431,7 +439,9 @@ if code_display =="Oui":
                 )
             
             p.add_tools(h)
-                
+            p.legend.location='bottom_right'
+            p.legend.background_fill_alpha=0.6
+                            
             st.bokeh_chart(p)
 
 else:
@@ -747,9 +757,11 @@ else:
         # préparation des couleurs des points prio et enregistrement de leurs coord
         line_coords=pd.DataFrame(columns=('X','Y'))
         colors = ['blue' for i in range(120)]
+        legend = ["Autres lieux patrimoniaux d'intérêt" for i in range(120)]
         
         for node in tops_per_cluster.iloc[:,cluster]:
             colors[node[0]] = 'red'
+            legend[node[0]] = 'Points patrimoniaux à visiter en priorité'
             line_coords=line_coords.append(
                 {"X":df_patrimoine[df_patrimoine['label']==cluster].iloc[node[0],1],
                  'Y':df_patrimoine[df_patrimoine['label']==cluster].iloc[node[0],2]},
@@ -760,7 +772,9 @@ else:
         #Affichage des points patrimoine
         df_patrimoine_cluster=df_patrimoine[df_patrimoine['label']==cluster]
         colors=colors[0:len(df_patrimoine_cluster)]
+        legend=legend[0:len(df_patrimoine_cluster)]
         df_patrimoine_cluster['colors']=colors
+        df_patrimoine_cluster['legend']=legend
         source_patrimoine=ColumnDataSource(df_patrimoine_cluster)
         renderer1=p.circle(
             x='X',
@@ -768,7 +782,8 @@ else:
             size=8,
             alpha=0.7,
             source=source_patrimoine,
-            color='colors'
+            color='colors',
+            legend='legend'
             )
         
         #Affichage des restaurants
@@ -779,7 +794,8 @@ else:
             size=8,
             alpha=0.7,
             source=source_restaurants,
-            color='green')
+            color='green',
+            legend_label='Restaurants')
         
         
         #Affichage des zones commerciales
@@ -790,7 +806,8 @@ else:
                 y='Y',
                 source=source_shopping,
                 color='orange',
-                alpha=0.5
+                alpha=0.5,
+                legend_label='Zones commerciales'
                 )
         
         # Optimisation du trajet entre points prioritaires
@@ -845,5 +862,7 @@ else:
             )
         
         p.add_tools(h)
+        p.legend.location='bottom_right'
+        p.legend.background_fill_alpha=0.6
             
         st.bokeh_chart(p)
