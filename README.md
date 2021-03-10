@@ -2,7 +2,7 @@
 This project is about creating a prototype application for optimizing tourists journeys. 
 
 ## Motivation
-This is a group project for a Data Analyst master degree. 
+This is a group project for a [Data Analyst bootcamp](https://datascientest.com/formation-data-analyst).
 This prototype is built for the city of Paris only. The longterm goal is to make the algorithm run no matter the city, via webscraping. 
 In his approach we will be using unsupervised machine learning (clustering), Geographical visualization and we also be applying algorithms related to the graph theory for itinerary optimization.
 ## Code style
