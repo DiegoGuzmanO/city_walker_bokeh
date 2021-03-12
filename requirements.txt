@@ -8,4 +8,4 @@ contextily
 networkx
 shapely
 descartes
-Bokeh Version 2.2.2
+bokeh v2.2.2
