@@ -8,4 +8,4 @@ contextily
 networkx
 shapely
 descartes
-bokeh=2.2.0
+bokeh=2.1.0
